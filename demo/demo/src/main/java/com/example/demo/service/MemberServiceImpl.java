@@ -47,6 +47,7 @@ public class MemberServiceImpl implements MemberService {
         return kakaoUtils.getKakaoAccessToken(authorCode);
     }
 
+    @Transactional
     @Override
     public MemberDto getKakaoMember(String accessToken) {
         String nickname = kakaoUtils.getKakaoUserInfo(accessToken);
@@ -60,7 +61,7 @@ public class MemberServiceImpl implements MemberService {
             return entityToMemberDto(result.orElseThrow());
         }
 
-        //email대신 nickname을 email로 주게끔 구현
+        //username에 nickname을 주게끔 구현
         Member socialMember = makeSocialMember(nickname);
         memberRepository.save(socialMember);
         return entityToMemberDto(socialMember);

@@ -48,7 +48,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/member/join", "/member/idValidation", "/member/nameValidation", "/member/telValidation").permitAll()
+                                .requestMatchers("/member/join", "/member/idValidation", "/member/nameValidation","/member/kakao/login","/member/kakao","/game/init", "/css/**","/js/**","/img/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(login ->
@@ -63,7 +63,7 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")  // 로그아웃 URL 지정
-                        .logoutSuccessUrl("/loginPage")  // 로그아웃 성공 시 이동할 URL 지정
+                        .logoutSuccessUrl("/member/login")  // 로그아웃 성공 시 이동할 URL 지정
                         .invalidateHttpSession(true)  // 세션 무효화
                         .deleteCookies("JSESSIONID")// 쿠키 삭제
                         .permitAll());

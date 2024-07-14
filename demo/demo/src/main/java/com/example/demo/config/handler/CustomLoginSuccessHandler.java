@@ -16,7 +16,7 @@ public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         log.info("로그인 성공");
-        setDefaultTargetUrl("/successLogin");
+        setDefaultTargetUrl("/game/init");
         setAlwaysUseDefaultTargetUrl(true);
         super.onAuthenticationSuccess(request, response, authentication);
     }
