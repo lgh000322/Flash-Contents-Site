@@ -36,7 +36,7 @@ public class MemberController {
                         Model model) {
         model.addAttribute("error", error);
         model.addAttribute("exception", exception);
-        return "login"; // 로그인 페이지의 뷰 이름
+        return "login";
     }
 
 
@@ -78,6 +78,10 @@ public class MemberController {
 
         SavedRequest savedRequest = requestCache.getRequest(request, response);
 
+        return prevPage(request, response, savedRequest);
+    }
+
+    private String prevPage(HttpServletRequest request, HttpServletResponse response, SavedRequest savedRequest) {
         if (savedRequest == null || savedRequest.getRedirectUrl().contains("login") || savedRequest.getRedirectUrl().contains("member")) {
             return "redirect:/game/init";
         }
