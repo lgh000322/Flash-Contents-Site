@@ -1,41 +1,44 @@
 package com.example.demo.controller;
 
-import com.example.demo.config.CustomUserDetailsService;
 import com.example.demo.dto.MemberDto;
 import com.example.demo.dto.MemberJoinDto;
 import com.example.demo.dto.MemberResponseDto;
-import com.example.demo.service.MemberService;
+import com.example.demo.service.declared.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.RequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Optional;
 
 @Controller
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/member")
 public class MemberController {
 
     private final MemberService memberService;
-    private final CustomUserDetailsService customUserDetailsService;
-
+    private final RequestCache requestCache = new HttpSessionRequestCache();
     @GetMapping("/login")
-    public String loginPage() {
-        return "login";
+    public String login(@RequestParam(value = "error", required = false) String error,
+                        @RequestParam(value = "exception", required = false) String exception,
+                        Model model) {
+        model.addAttribute("error", error);
+        model.addAttribute("exception", exception);
+        return "login"; // 로그인 페이지의 뷰 이름
     }
 
-    @PostMapping("/login")
-    public String loginProc() {
-        return "init";
-    }
 
     @GetMapping("/join")
     public String joinPage() {
@@ -59,14 +62,9 @@ public class MemberController {
         return new RedirectView(memberService.getKakaoURI());
     }
 
-    /**
-     * Todo
-     * 카카오 인가 코드 받는 url 설정하고
-     * 인증코드 및 카카오 사용자 정보 받아야함
-     * 받고 리턴할 때 세션적용시켜야 함
-     */
+
     @GetMapping("/kakao")
-    public String redirectFunc(@RequestParam(name = "code") String authorCode, HttpServletRequest request) {
+    public String redirectFunc(@RequestParam(name = "code") String authorCode, HttpServletRequest request,HttpServletResponse response) {
         String kakaoAccessToken = memberService.getAccessToken(authorCode);
 
         MemberDto kakaoMember = memberService.getKakaoMember(kakaoAccessToken);
@@ -78,7 +76,17 @@ public class MemberController {
         HttpSession session = request.getSession(true);
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
 
-        return "redirect:/game/init";
+        SavedRequest savedRequest = requestCache.getRequest(request, response);
+
+        if (savedRequest == null || savedRequest.getRedirectUrl().contains("login") || savedRequest.getRedirectUrl().contains("member")) {
+            return "redirect:/game/init";
+        }
+
+        String targetUrl = savedRequest.getRedirectUrl().substring(21, savedRequest.getRedirectUrl().lastIndexOf("?"));
+        log.info("targeturl={}", targetUrl);
+
+        requestCache.removeRequest(request, response);
+        return "redirect:" + targetUrl;
     }
 
 }
