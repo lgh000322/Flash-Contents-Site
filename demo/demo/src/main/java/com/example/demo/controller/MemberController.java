@@ -67,22 +67,14 @@ public class MemberController {
      */
     @GetMapping("/kakao")
     public String redirectFunc(@RequestParam(name = "code") String authorCode, HttpServletRequest request) {
-        // Step 1: Obtain Kakao access token
         String kakaoAccessToken = memberService.getAccessToken(authorCode);
 
-        // Step 2: Obtain Kakao member information
         MemberDto kakaoMember = memberService.getKakaoMember(kakaoAccessToken);
 
-        // Step 3: Load UserDetails
-        UserDetails userDetails = customUserDetailsService.loadUserByUsername(kakaoMember.getUsername());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(kakaoMember, null, kakaoMember.getAuthorities());
 
-        // Step 4: Create UsernamePasswordAuthenticationToken
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
-        // Step 5: Authenticate the user
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-        // Step 6: Store the SecurityContext in session
         HttpSession session = request.getSession(true);
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
 
