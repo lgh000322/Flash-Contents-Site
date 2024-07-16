@@ -15,10 +15,12 @@ import static com.example.demo.domain.QRanking.*;
 public class RankingRepositoryCustomImpl extends QuerydslRepositorySupport implements RankingRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+
     public RankingRepositoryCustomImpl(EntityManager entityManager) {
         super(Ranking.class);
         queryFactory = new JPAQueryFactory(entityManager);
     }
+
     @Override
     public Optional<Ranking> findByNickname(String nickname) {
         //회원의 닉네임
@@ -56,6 +58,9 @@ public class RankingRepositoryCustomImpl extends QuerydslRepositorySupport imple
                 .from(ranking)
                 .innerJoin(ranking.game, game)
                 .where(ranking.game.id.eq(gameId))
+                .orderBy(ranking.score.desc())
+                .limit(10)
+                .offset(0)
                 .fetch());
     }
 }
