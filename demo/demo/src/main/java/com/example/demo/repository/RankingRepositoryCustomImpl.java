@@ -5,6 +5,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.example.demo.domain.QGame.*;
@@ -46,5 +47,15 @@ public class RankingRepositoryCustomImpl extends QuerydslRepositorySupport imple
                 .fetchOne();
 
         return score;
+    }
+
+    @Override
+    public Optional<List<Ranking>> findAllByGameId(Long gameId) {
+        return Optional.ofNullable(queryFactory
+                .select(ranking)
+                .from(ranking)
+                .innerJoin(ranking.game, game)
+                .where(ranking.game.id.eq(gameId))
+                .fetch());
     }
 }

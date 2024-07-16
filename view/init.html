@@ -25,6 +25,7 @@
                         <li th:if="${memberName}"><a class="nav-link" th:href="@{/logout}">로그아웃</a></li>
                         <li th:if="${memberName}"><a class="nav-link" href="#">사용자</a></li>
                         <li th:unless="${memberName}" class="nav-item"> <a class="nav-link" href="/member/login">로그인</a> </li>
+                        <li class="nav-item"> <a class="nav-link" href="#">랭킹</a> </li>
                     </ul>
                 </div>
             </div>
