@@ -21,6 +21,7 @@
 - **WAS** : Tomcat
 
 ## 📝 ERD
+(https://github.com/user-attachments/assets/0ea555d4-1f74-4551-b2ff-611ba7d84b4d)
 
 ## 📌 주요 기능
 - 로그인 기능
