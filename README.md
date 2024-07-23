@@ -20,6 +20,8 @@
 - **DataBase** : MySQL, JPA, Querydsl, ERD
 - **WAS** : Tomcat
 
+## 📝 ERD
+
 ## 📌 주요 기능
 - 로그인 기능
   - Spring Security를 이용한 인증과 인가 작업
