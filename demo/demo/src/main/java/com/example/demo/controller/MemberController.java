@@ -4,6 +4,7 @@ import com.example.demo.dto.MemberDto;
 import com.example.demo.dto.MemberJoinDto;
 import com.example.demo.dto.MemberResponseDto;
 import com.example.demo.service.declared.MemberService;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -29,7 +30,12 @@ import java.util.Optional;
 public class MemberController {
 
     private final MemberService memberService;
-    private final RequestCache requestCache = new HttpSessionRequestCache();
+    private RequestCache requestCache;
+    @PostConstruct
+    public void init() {
+        requestCache = new HttpSessionRequestCache();
+    }
+
     @GetMapping("/login")
     public String login(@RequestParam(name = "error", required = false) String error,
                         @RequestParam(name = "exception", required = false) String exception,
@@ -69,7 +75,8 @@ public class MemberController {
 
         MemberDto kakaoMember = memberService.getKakaoMember(kakaoAccessToken);
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(kakaoMember, null, kakaoMember.getAuthorities());
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(kakaoMember, null, kakaoMember.getAuthorities());
 
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 

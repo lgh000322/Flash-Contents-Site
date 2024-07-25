@@ -1,5 +1,6 @@
 package com.example.demo.config.handler;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,24 +18,26 @@ import java.io.IOException;
 @Slf4j
 public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final RequestCache requestCache = new HttpSessionRequestCache();
+    private RequestCache requestCache;
+
+    @PostConstruct
+    public void init() {
+        requestCache = new HttpSessionRequestCache();
+    }
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         log.info("로그인 성공");
 
         SavedRequest savedRequest = requestCache.getRequest(request, response);
 
-        if (savedRequest == null || savedRequest.getRedirectUrl().contains("login")||savedRequest.getRedirectUrl().contains("member")) {
+        if (savedRequest == null || savedRequest.getRedirectUrl().contains("login") || savedRequest.getRedirectUrl().contains("member")) {
             setDefaultTargetUrl("/game/init");
             super.onAuthenticationSuccess(request, response, authentication);
             return;
         }
-
         String targetUrl = savedRequest.getRedirectUrl();
         log.info("리다이렉트 URL: {}", targetUrl);
-
         requestCache.removeRequest(request, response);
-
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 }

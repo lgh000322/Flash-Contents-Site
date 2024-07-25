@@ -9,6 +9,11 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @ToString(exclude = {"member","game"})
+@Table(
+        indexes = {
+                @Index(columnList = "game_id", name = "idx_comment_game_id")
+        }
+)
 public class Comment {
 
     @Id

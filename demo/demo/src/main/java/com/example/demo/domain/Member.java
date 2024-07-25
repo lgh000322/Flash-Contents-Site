@@ -12,16 +12,20 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @ToString(exclude = "memberRoleList")
+@Table(indexes = {
+        @Index(columnList = "username", name = "idx_username"),
+        @Index(columnList = "nickname", name = "idx_nickname")
+})
 public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true,nullable = false)
+    @Column(unique = true, nullable = false)
     private String nickname;
 
-    @Column(unique = true,nullable = false)
+    @Column(unique = true, nullable = false)
     private String username;
 
     @Column(nullable = false)
