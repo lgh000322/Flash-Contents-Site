@@ -1,0 +1,54 @@
+.black-ops-one-regular {
+    font-family: "Black Ops One", system-ui;
+    font-weight: 400;
+    font-style: normal;
+    text-align: center;
+  }
+
+  #canvas{
+    width: 60%;
+    height: 600px;
+    margin-left: 20%;
+    background-color: aliceblue;
+  }
+
+  #sel-option{
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  #sel-option > button{
+    width: 300px;
+    height: 50px;
+  }
+
+  #comment-submit-aria form {
+    display: flex;
+    align-items: center; /* 수직 가운데 정렬 */
+    margin-bottom: 30px;
+  }
+
+  #comment-submit-aria form .form-control {
+    flex: 1; /*남은 공간 차지*/
+    margin-right: 20px;
+  }
+
+  #comment-submit-aria form #comment-submit-btn {
+   width: 130px;
+  }
+
+
+
+
+
+  #comments{
+
+    margin-top: 4px;
+    padding: 1%;
+    background-color: #fff;
+    border-radius: 10px;
+    line-height: 7px;
+  }
+
+
