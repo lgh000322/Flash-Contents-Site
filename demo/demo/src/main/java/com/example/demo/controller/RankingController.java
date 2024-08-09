@@ -47,12 +47,8 @@ public class RankingController {
         map.put("success", true);
         map.put("score", score);
 
-        if (rankingDto.getScore() == 1) {
-            rankingService.save(rankingDto);
-            return map;
-        }
 
-        rankingService.update(rankingDto);
+        rankingService.saveOrUpdate(rankingDto);
         return map;
     }
 
@@ -60,16 +56,15 @@ public class RankingController {
     public String rankingPage(@PathVariable(name = "gameId") Long gameId, Model model) {
         String gamename = gameService.findById(gameId).orElseThrow().getGamename();
 
-        StringBuffer sb = new StringBuffer();
-        sb.append("ranking_");
-        sb.append(gamename);
 
         Optional<List<RankingDto>> foundedRankings = rankingService.findByGameId(gameId);
         List<RankingDto> rankingDtos = foundedRankings.orElseThrow();
 
         model.addAttribute("gameTitleRanking", gamename + "의 랭킹");
         model.addAttribute("rankingList", rankingDtos);
+        model.addAttribute("gameId", gameId);
 
-        return sb.toString();
+        return "ranking";
     }
+
 }

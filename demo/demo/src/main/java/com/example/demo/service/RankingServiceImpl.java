@@ -29,6 +29,7 @@ public class RankingServiceImpl implements RankingService {
     private final MemberRepository memberRepository;
     private final GameRepository gameRepository;
 
+
     @Transactional
     @Override
     public Optional<RankingDto> save(RankingDto rankingDto) {
@@ -45,6 +46,21 @@ public class RankingServiceImpl implements RankingService {
         Optional<Ranking> foundedRanking = rankingRepository.findByGameNameAndNickName(rankingDto.getGamename(), rankingDto.getNickname());
         Ranking ranking = foundedRanking.orElseThrow(() ->
                 new RuntimeException("회원이 가진 점수가 존재하지 않습니다."));
+        ranking.updateScore(rankingDto.getScore());
+        return Optional.ofNullable(entityToRankingDto(ranking));
+    }
+
+    @Transactional
+    @Override
+    public Optional<RankingDto> saveOrUpdate(RankingDto rankingDto) {
+        Optional<Ranking> foundedRanking = rankingRepository.findByGameNameAndNickName(rankingDto.getGamename(), rankingDto.getNickname());
+        if (foundedRanking.isEmpty()) {
+            Game game = getGame(rankingDto);
+            Member member = getMember();
+            Ranking ranking = getRanking(rankingDto, game, member);
+            return Optional.ofNullable(entityToRankingDto(rankingRepository.save(ranking)));
+        }
+        Ranking ranking = foundedRanking.get();
         ranking.updateScore(rankingDto.getScore());
         return Optional.ofNullable(entityToRankingDto(ranking));
     }

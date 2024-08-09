@@ -12,6 +12,8 @@ public interface RankingService {
 
     Optional<RankingDto> update(RankingDto rankingDto);
 
+    Optional<RankingDto> saveOrUpdate(RankingDto rankingDto);
+
     Optional<List<RankingDto>> findByGameId(Long gameId);
 
     Integer findScoreByGameNameAndNickname(String gamename, String nickname);
