@@ -71,7 +71,7 @@
             <div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
                 <ul class="navbar-nav">
                     <li><a class="nav-link" th:href="@{/logout}">로그아웃</a></li>
-                    <li><a class="nav-link" th:href="@{/game/1}">게임</a></li>
+                    <li><a class="nav-link" th:href="@{/game/{gameId}(gameId=${gameId})}">게임</a></li>
                     <li><a class="nav-link" href="#">사용자</a></li>
                 </ul>
             </div>
