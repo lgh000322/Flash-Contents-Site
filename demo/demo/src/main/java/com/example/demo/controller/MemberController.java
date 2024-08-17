@@ -4,6 +4,7 @@ import com.example.demo.dto.MemberDto;
 import com.example.demo.dto.MemberJoinDto;
 import com.example.demo.dto.MemberResponseDto;
 import com.example.demo.service.declared.MemberService;
+import com.example.demo.util.KakaoUtils;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,6 +31,7 @@ import java.util.Optional;
 public class MemberController {
 
     private final MemberService memberService;
+    private final KakaoUtils kakaoUtils;
     private RequestCache requestCache;
     @PostConstruct
     public void init() {
@@ -65,13 +67,13 @@ public class MemberController {
 
     @GetMapping("/kakao/login")
     public RedirectView kakaoLogin() {
-        return new RedirectView(memberService.getKakaoURI());
+        return new RedirectView(kakaoUtils.getKakaoURI());
     }
 
 
     @GetMapping("/kakao")
     public String redirectFunc(@RequestParam(name = "code") String authorCode, HttpServletRequest request,HttpServletResponse response) {
-        String kakaoAccessToken = memberService.getAccessToken(authorCode);
+        String kakaoAccessToken = kakaoUtils.getKakaoAccessToken(authorCode);
 
         MemberDto kakaoMember = memberService.getKakaoMember(kakaoAccessToken);
 

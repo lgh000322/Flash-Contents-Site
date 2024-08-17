@@ -11,17 +11,13 @@ import java.util.stream.Collectors;
 public interface MemberService {
     Optional<MemberResponseDto> save(MemberJoinDto memberJoinDto);
 
-    String getKakaoURI();
-
-    String getAccessToken(String authorCode);
-
     MemberDto getKakaoMember(String accessToken);
+
     boolean isExistsByUsername(String username);
 
     boolean isExistsByNickname(String nickname);
 
     default Member memberJoinDtoToEntity(MemberJoinDto memberJoinDto) {
-
         return Member.builder()
                 .username(memberJoinDto.getId())
                 .password(memberJoinDto.getPw())

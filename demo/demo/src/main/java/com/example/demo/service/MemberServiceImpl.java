@@ -38,15 +38,6 @@ public class MemberServiceImpl implements MemberService {
         return Optional.ofNullable(entityToMemberResponseDto(save));
     }
 
-    @Override
-    public String getKakaoURI() {
-        return kakaoUtils.getKakaoURI();
-    }
-
-    @Override
-    public String getAccessToken(String authorCode) {
-        return kakaoUtils.getKakaoAccessToken(authorCode);
-    }
 
     @Transactional
     @Override
@@ -68,6 +59,16 @@ public class MemberServiceImpl implements MemberService {
         return entityToMemberDto(socialMember);
     }
 
+    @Override
+    public boolean isExistsByUsername(String username) {
+        return memberRepository.existsByUsername(username);
+    }
+
+    @Override
+    public boolean isExistsByNickname(String nickname) {
+        return memberRepository.existsByNickname(nickname);
+    }
+
     private Member makeSocialMember(String username) {
 
         String tempPassword = passwordEncoder.encode(UUID.randomUUID().toString());
@@ -83,16 +84,6 @@ public class MemberServiceImpl implements MemberService {
         member.addRole(MemberRole.USER);
 
         return member;
-    }
-
-    @Override
-    public boolean isExistsByUsername(String username) {
-        return memberRepository.existsByUsername(username);
-    }
-
-    @Override
-    public boolean isExistsByNickname(String nickname) {
-        return memberRepository.existsByNickname(nickname);
     }
 
 }
